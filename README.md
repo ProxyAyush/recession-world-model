@@ -1,5 +1,5 @@
 # 📈 Recession World Model - Weekly Report
-Generated on: 2026-04-20 02:04:49
+Generated on: 2026-04-20 13:09:53
 
 ## 🔮 Current Projections
 | Horizon | Probability | Status |
@@ -12,10 +12,10 @@ Generated on: 2026-04-20 02:04:49
 Initial Run - No historical data to compare yet.
 
 ## 📊 Raw Indicators Used
-- **Yield Spread (10Y-3M):** None%
-- **Sahm Rule Value:** None
-- **Industrial Production Index:** None
-- **Unemployment Rate:** None%
+- **Yield Spread (10Y-3M):** 0.56%
+- **Sahm Rule Value:** 0.2
+- **Industrial Production Index:** 101.7898
+- **Unemployment Rate:** 4.3%
 
 ---
-*Data sourced from FRED via DBnomics. This model is for informational purposes and uses established financial research weightings.*
+*Data sourced from FRED. This model is for informational purposes and uses established financial research weightings.*

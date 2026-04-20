@@ -1,7 +1,6 @@
 import os
 import requests
 import json
-import pandas as pd
 from datetime import datetime, timedelta
 
 # Indicator IDs
@@ -12,17 +11,25 @@ from datetime import datetime, timedelta
 INDICATORS = ['T10Y3M', 'SAHMREALTIME', 'INDPRO', 'UNRATE']
 
 def fetch_fred_data(series_id):
-    """Fetch data from DBnomics (No API key required)"""
-    url = f"https://api.db.nomics.world/v22/series/FRED/FRED/{series_id}?observations=1"
+    """Fetch data directly from FRED as CSV (No API key required)"""
+    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
     try:
         response = requests.get(url)
         response.raise_for_status()
-        data = response.json()
-        series = data['series']['docs'][0]
-        return {
-            'date': series['period'][-1],
-            'value': float(series['value'][-1])
-        }
+        # CSV format: DATE,VALUE
+        lines = [line.strip() for line in response.text.strip().split('\n') if line.strip()]
+        if len(lines) < 2:
+            return None
+        
+        # FRED uses '.' for missing values, so we look for the last valid number
+        for i in range(len(lines) - 1, 0, -1):
+            date, value = lines[i].split(',')
+            if value != '.':
+                return {
+                    'date': date,
+                    'value': float(value)
+                }
+        return None
     except Exception as e:
         print(f"Error fetching {series_id}: {e}")
         return None
@@ -107,7 +114,7 @@ Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 - **Unemployment Rate:** {latest_data.get('UNRATE', {}).get('value')}%
 
 ---
-*Data sourced from FRED via DBnomics. This model is for informational purposes and uses established financial research weightings.*
+*Data sourced from FRED. This model is for informational purposes and uses established financial research weightings.*
 """
     with open('README.md', 'w') as f:
         f.write(report)
