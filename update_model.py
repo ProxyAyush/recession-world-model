@@ -1,13 +1,9 @@
 import os
 import requests
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 
 # Indicator IDs
-# T10Y3M: 10-Year Treasury Minus 3-Month Treasury Spread
-# SAHMREALTIME: Sahm Rule Recession Indicator
-# INDPRO: Industrial Production Index
-# UNRATE: Unemployment Rate
 INDICATORS = ['T10Y3M', 'SAHMREALTIME', 'INDPRO', 'UNRATE']
 
 def fetch_fred_data(series_id):
@@ -16,12 +12,10 @@ def fetch_fred_data(series_id):
     try:
         response = requests.get(url)
         response.raise_for_status()
-        # CSV format: DATE,VALUE
         lines = [line.strip() for line in response.text.strip().split('\n') if line.strip()]
         if len(lines) < 2:
             return None
         
-        # FRED uses '.' for missing values, so we look for the last valid number
         for i in range(len(lines) - 1, 0, -1):
             date, value = lines[i].split(',')
             if value != '.':
@@ -36,18 +30,12 @@ def fetch_fred_data(series_id):
 
 def calculate_probabilities(latest_data):
     """Weighted World Model based on research"""
-    # Latest values
     yield_spread = latest_data.get('T10Y3M', {}).get('value', 0.5)
     sahm_val = latest_data.get('SAHMREALTIME', {}).get('value', 0.1)
     
-    # Probability Logic
-    # 1. Yield Spread (Estrella-Mishkin Model)
     yield_risk = 95 if yield_spread < 0 else (60 if yield_spread < 0.5 else 20)
-    
-    # 2. Sahm Rule (Labor Momentum)
     sahm_risk = 95 if sahm_val >= 0.5 else (50 if sahm_val >= 0.3 else 10)
 
-    # Weights
     today_prob = int((sahm_risk * 0.85) + (yield_risk * 0.15))
     one_month_prob = int((sahm_risk * 0.6) + (yield_risk * 0.4))
     one_year_prob = int((yield_risk * 0.8) + (sahm_risk * 0.2))
@@ -69,10 +57,8 @@ def update_history(current_probs):
     
     history.append(current_probs)
     
-    # Accuracy Tracking (How far off were we?)
-    # We compare current 'today' reality vs what we predicted 1 month ago
     accuracy_report = "Initial Run - No historical data to compare yet."
-    if len(history) > 4: # Assuming weekly runs, 4 weeks ~ 1 month
+    if len(history) > 4:
         past_pred = history[-4]['1_month']
         current_reality = current_probs['today']
         diff = abs(current_reality - past_pred)
@@ -81,13 +67,28 @@ def update_history(current_probs):
     with open(history_file, 'w') as f:
         json.dump(history, f, indent=4)
     
+    # Generate FULL_HISTORY.md
+    with open('FULL_HISTORY.md', 'w') as f:
+        f.write("# 📜 Full Model History\n\n")
+        f.write("| Date | Today's Risk | 1 Month Risk | 1 Year Risk |\n")
+        f.write("| :--- | :--- | :--- | :--- |\n")
+        for entry in reversed(history):
+            date_str = entry['timestamp'].split('T')[0]
+            f.write(f"| {date_str} | {entry['today']}% | {entry['1_month']}% | {entry['1_year']}% |\n")
+        
+        # Simple text-based graph
+        f.write("\n## 📈 Trend (Today's Risk)\n```\n")
+        for entry in history:
+            date_str = entry['timestamp'].split('T')[0]
+            bar = "█" * (entry['today'] // 5)
+            f.write(f"{date_str}: {bar} {entry['today']}%\n")
+        f.write("```\n")
+    
     return accuracy_report
 
 def main():
     print("Fetching latest economic data...")
     latest_data = {id: fetch_fred_data(id) for id in INDICATORS}
-    
-    # Filter out failed fetches
     latest_data = {k: v for k, v in latest_data.items() if v is not None}
     
     probs = calculate_probabilities(latest_data)
@@ -114,6 +115,8 @@ Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 - **Unemployment Rate:** {latest_data.get('UNRATE', {}).get('value')}%
 
 ---
+### 📚 [View Full History & Trends](./FULL_HISTORY.md)
+
 *Data sourced from FRED. This model is for informational purposes and uses established financial research weightings.*
 """
     with open('README.md', 'w') as f:

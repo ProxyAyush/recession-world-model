@@ -1,5 +1,5 @@
 # 📈 Recession World Model - Weekly Report
-Generated on: 2026-04-20 13:09:53
+Generated on: 2026-04-20 13:13:54
 
 ## 🔮 Current Projections
 | Horizon | Probability | Status |
@@ -9,7 +9,7 @@ Generated on: 2026-04-20 13:09:53
 | **1 Year** | **18%** | 🟢 Low |
 
 ## 🎯 Model Accuracy Tracker
-Initial Run - No historical data to compare yet.
+Prediction vs Reality: 1 month ago we predicted 14% risk today. Actual risk is 11%. Variance: 3%
 
 ## 📊 Raw Indicators Used
 - **Yield Spread (10Y-3M):** 0.56%
@@ -18,4 +18,6 @@ Initial Run - No historical data to compare yet.
 - **Unemployment Rate:** 4.3%
 
 ---
+### 📚 [View Full History & Trends](./FULL_HISTORY.md)
+
 *Data sourced from FRED. This model is for informational purposes and uses established financial research weightings.*
