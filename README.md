@@ -1,5 +1,5 @@
 # 📈 Recession World Model - Weekly Report
-Generated on: 2026-04-13 02:04:30
+Generated on: 2026-04-20 02:04:49
 
 ## 🔮 Current Projections
 | Horizon | Probability | Status |
