@@ -55,8 +55,20 @@ def update_history(current_probs):
     else:
         history = []
     
+    # Add new entry
     history.append(current_probs)
     
+    # Deduplicate by date (keep latest run per day)
+    seen_dates = {}
+    unique_history = []
+    for entry in history:
+        date = entry['timestamp'].split('T')[0]
+        seen_dates[date] = entry
+    
+    # Rebuild history in chronological order
+    sorted_dates = sorted(seen_dates.keys())
+    history = [seen_dates[d] for d in sorted_dates]
+
     accuracy_report = "Initial Run - No historical data to compare yet."
     if len(history) > 4:
         past_pred = history[-4]['1_month']
