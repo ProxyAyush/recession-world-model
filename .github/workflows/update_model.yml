@@ -31,6 +31,6 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add README.md history.json
+          git add README.md history.json FULL_HISTORY.md
           git commit -m "Update Recession Model: $(date +'%Y-%m-%d')" || exit 0
           git push
