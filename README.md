@@ -1,5 +1,5 @@
 # 📈 Recession World Model - Weekly Report
-Generated on: 2026-06-29 02:50:03
+Generated on: 2026-07-06 02:34:04
 
 ## 🔮 Current Projections
 | Horizon | Probability | Status |
@@ -12,10 +12,10 @@ Generated on: 2026-06-29 02:50:03
 Prediction vs Reality: 1 month ago we predicted 14% risk today. Actual risk is 11%. Variance: 3%
 
 ## 📊 Raw Indicators Used
-- **Yield Spread (10Y-3M):** 0.55%
-- **Sahm Rule Value:** 0.1
+- **Yield Spread (10Y-3M):** 0.67%
+- **Sahm Rule Value:** 0.07
 - **Industrial Production Index:** 102.6475
-- **Unemployment Rate:** 4.3%
+- **Unemployment Rate:** 4.2%
 
 ---
 ### 📚 [View Full History & Trends](./FULL_HISTORY.md)
